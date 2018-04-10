@@ -7,7 +7,6 @@ const fetchProjects = async() => {
   projects.forEach(project => {
     projectArr.push(project);
     renderProject(project);
-    fetchPalettes(project);
   });
 }
 
@@ -17,24 +16,24 @@ const fetchPalettes = async(project) => {
   await renderPalette(palettes);
 }
 
-const renderProject = (project) => {
+const renderProject = (project, palettes) => {
   $('.projects').prepend(`<h3 class='proj-name'>${project.name}</h3>`);
   $('select').append(`<option>${project.name}</option>`);
 }
 
 const renderPalette = (palettes, project) => {
   palettes.forEach(palette => {
-    $('.palette').append(`
-      <h4 id=${palette.id}>${palette.name}</h4>
-      <div class='saved-colors' id=${palette.id}>
-        <div class='small-box' style='background-color: ${palette.color0}'></div>
-        <div class='small-box' style='background-color: ${palette.color1}'></div>
-        <div class='small-box' style='background-color: ${palette.color2}'></div>
-        <div class='small-box' style='background-color: ${palette.color3}'></div>
-        <div class='small-box' style='background-color: ${palette.color4}'></div>
-        <div class='trash-img'><div/>
-      </div>
-    `)
+      $('.palette').append(`
+        <h4 id=${palette.id}>${palette.name}</h4>
+        <div class='saved-colors' id=${palette.id}>
+          <div class='small-box' style='background-color: ${palette.color0}'></div>
+          <div class='small-box' style='background-color: ${palette.color1}'></div>
+          <div class='small-box' style='background-color: ${palette.color2}'></div>
+          <div class='small-box' style='background-color: ${palette.color3}'></div>
+          <div class='small-box' style='background-color: ${palette.color4}'></div>
+          <div class='trash-img'><div/>
+        </div>
+      `)
   });  
 }
 

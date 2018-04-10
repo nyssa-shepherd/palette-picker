@@ -46,6 +46,11 @@ button:hover {
   background-color: rgba(166, 184, 190, 0.8);
   border: none;
   color: #fff;
+  cursor: pointer;
+}
+
+button:focus {
+  outline: none;
 }
 
 .lock-btn {
