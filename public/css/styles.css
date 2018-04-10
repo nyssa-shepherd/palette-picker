@@ -48,6 +48,10 @@ button:hover {
   color: #fff;
 }
 
+button:focus {
+  outline: none;
+}
+
 .lock-btn {
   background-color: transparent;
   background-image: url('../images/unlocked.png');
