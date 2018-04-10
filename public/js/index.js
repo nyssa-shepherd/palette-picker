@@ -25,8 +25,8 @@ const renderProject = (project) => {
 const renderPalette = (palettes, project) => {
   palettes.forEach(palette => {
     $('.palette').append(`
-      <h4>${palette.name}</h4>
-      <div class='saved-colors'>
+      <div class='saved-colors' id=${palette.id}>
+        <h4>${palette.name}</h4>
         <div class='small-box' style='background-color: ${palette.color0}'></div>
         <div class='small-box' style='background-color: ${palette.color1}'></div>
         <div class='small-box' style='background-color: ${palette.color2}'></div>
@@ -118,14 +118,13 @@ const lockColor = (e) => {
     console.log('locked') : console.log('unlocked');
 }
 
-const deletePalette = async(e) => {
-  e.target.classList.contains('trash-img') ? console.log(e.target.parentElement) : null;
-  // const paletteId = palette.id;
-
-  // const deleteFetch = await fetch(`/api/v1/palettes/${paletteId}`, {
-  //   method: 'DELETE'});
-
-  // e.target.parentElement.remove();
+const deletePalette = async(e, id) => {
+  if (e.target.classList.contains('trash-img')) { 
+    await fetch(`/api/v1/palettes/${id}`, {
+      method: 'DELETE'
+    }) 
+    await e.target.parentNode.remove();
+  }
 };
 
 
@@ -139,7 +138,9 @@ $('.save-project-button').on('click', submitProject);
 $('.gen-button').on('click', callHex);
 $('.lock-btn').on('click', lockColor);
 
-$('.palette').on('click', deletePalette)
+$('.palette').on('click', (e) => {
+  deletePalette(e, e.target.parentElement.id);
+})
 
 
 

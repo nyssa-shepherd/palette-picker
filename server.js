@@ -106,6 +106,19 @@ app.post('/api/v1/projects/:id/palettes', (request, response) => {
     });
 });
 
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  const { id } = request.params;
+  const item = database('palettes').where('id', id);
+  
+  item.delete()
+    .then(data => {
+      return response.status(204).json({ data });
+    })
+    .catch(error => {
+      return response.status(404).json({ error });
+    });
+})
+
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost:3000');
 });
