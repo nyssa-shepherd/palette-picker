@@ -70,10 +70,10 @@ app.get('/api/v1/projects/:id/palettes', (request, response) => {
 });
 
 app.post('/api/v1/projects/:id/palettes', (request, response) => {
-  const palettes = request.body;
+  const paletteInfo = request.body;
 
   for (let requiredParameter of ['name', 'color0', 'color1', 'color2', 'color3', 'color4', 'projects_id']) {
-    if (!palettes[requiredParameter]) {
+    if (!paletteInfo[requiredParameter]) {
       return response
         .status(422)
         .send({ error: `Expected format: { 
@@ -88,23 +88,28 @@ app.post('/api/v1/projects/:id/palettes', (request, response) => {
     }
   }
 
-  database('palettes').insert(palettes, 'id')
+  database('palettes').insert(paletteInfo, 'id')
     .then(palettes => {
-      response.status(201).json({ 
-        id: palettes_id[0], 
-        name: palettes.name,
-        color0: palettes.color0, 
-        color1: palettes.color1, 
-        color2: palettes.color2, 
-        color3: palettes.color3, 
-        color4: palettes.color4,
-        projects_id: palettes.projMatch.id
-       })
+      const { name, color0, color1, color2, color3, color4, projects_id } = paletteInfo;
+      response.status(201).json({ id: palettes[0], name, color0, color1, color2, color3, color4, projects_id });
     })
     .catch(error => {
       response.status(500).json({ error });
     });
 });
+
+app.delete('/api/v1/palettes/:id', (request, response) => {
+  const { id } = request.params;
+  const item = database('palettes').where('id', id);
+  
+  item.delete()
+    .then(data => {
+      return response.status(204).json({ data });
+    })
+    .catch(error => {
+      return response.status(404).json({ error });
+    });
+})
 
 app.listen(app.get('port'), () => {
   console.log('Express intro running on localhost:3000');

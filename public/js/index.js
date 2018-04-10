@@ -25,8 +25,8 @@ const renderProject = (project) => {
 const renderPalette = (palettes, project) => {
   palettes.forEach(palette => {
     $('.palette').append(`
-      <h4>${palette.name}</h4>
-      <div class='saved-colors'>
+      <h4 id=${palette.id}>${palette.name}</h4>
+      <div class='saved-colors' id=${palette.id}>
         <div class='small-box' style='background-color: ${palette.color0}'></div>
         <div class='small-box' style='background-color: ${palette.color1}'></div>
         <div class='small-box' style='background-color: ${palette.color2}'></div>
@@ -62,17 +62,17 @@ const savePalette = async(e) => {
   let projects_id = projMatch.id
   let palette = { name, color0, color1, color2, color3, color4, projects_id }
 
-  postPalette(projMatch, palette)
+  await postPalette(projMatch, palette)
 }
 
 const postPalette = async(projMatch, palette) => {
-  const post = await fetch(`/api/v1/projects/${projMatch.id}/palettes`, {
-  method: 'POST',
-  body: JSON.stringify(palette), 
-  headers: new Headers({ 'Content-Type': 'application/json' })
-})
-  await post.json();
-  await fetchPalettes(projMatch);
+  const post = await fetch(`/api/v1/projects/${projMatch.id}/palettes/`, {
+    method: 'POST',
+    body: JSON.stringify({ name: palette.name, color0: palette.color0, color1: palette.color1, color2: palette.color2, color3: palette.color3, color4: palette.color4, projects_id: projMatch.id }), 
+    headers: new Headers({ 'Content-Type': 'application/json' })
+  })
+  const newPalette = await post.json();
+  await renderPalette([newPalette]);
   $('#pal-name-input').val('');
 }
 
@@ -118,14 +118,14 @@ const lockColor = (e) => {
     console.log('locked') : console.log('unlocked');
 }
 
-const deletePalette = async(e) => {
-  e.target.classList.contains('trash-img') ? console.log(e.target.parentElement) : null;
-  // const paletteId = palette.id;
-
-  // const deleteFetch = await fetch(`/api/v1/palettes/${paletteId}`, {
-  //   method: 'DELETE'});
-
-  // e.target.parentElement.remove();
+const deletePalette = async(e, id) => {
+  if (e.target.classList.contains('trash-img')) { 
+    await fetch(`/api/v1/palettes/${id}`, {
+      method: 'DELETE'
+    }) 
+    await e.target.parentNode.remove();
+    await $(`#${id}`).remove();
+  }
 };
 
 
@@ -139,7 +139,9 @@ $('.save-project-button').on('click', submitProject);
 $('.gen-button').on('click', callHex);
 $('.lock-btn').on('click', lockColor);
 
-$('.palette').on('click', deletePalette)
+$('.palette').on('click', (e) => {
+  deletePalette(e, e.target.parentElement.id);
+})
 
 
 
