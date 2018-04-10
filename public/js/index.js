@@ -25,8 +25,8 @@ const renderProject = (project) => {
 const renderPalette = (palettes, project) => {
   palettes.forEach(palette => {
     $('.palette').append(`
+      <h4 id=${palette.id}>${palette.name}</h4>
       <div class='saved-colors' id=${palette.id}>
-        <h4>${palette.name}</h4>
         <div class='small-box' style='background-color: ${palette.color0}'></div>
         <div class='small-box' style='background-color: ${palette.color1}'></div>
         <div class='small-box' style='background-color: ${palette.color2}'></div>
@@ -124,6 +124,7 @@ const deletePalette = async(e, id) => {
       method: 'DELETE'
     }) 
     await e.target.parentNode.remove();
+    await $(`#${id}`).remove();
   }
 };
 
