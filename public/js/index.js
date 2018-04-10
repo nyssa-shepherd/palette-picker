@@ -62,17 +62,17 @@ const savePalette = async(e) => {
   let projects_id = projMatch.id
   let palette = { name, color0, color1, color2, color3, color4, projects_id }
 
-  postPalette(projMatch, palette)
+  await postPalette(projMatch, palette)
 }
 
 const postPalette = async(projMatch, palette) => {
-  const post = await fetch(`/api/v1/projects/${projMatch.id}/palettes`, {
-  method: 'POST',
-  body: JSON.stringify(palette), 
-  headers: new Headers({ 'Content-Type': 'application/json' })
-})
-  await post.json();
-  await fetchPalettes(projMatch);
+  const post = await fetch(`/api/v1/projects/${projMatch.id}/palettes/`, {
+    method: 'POST',
+    body: JSON.stringify({ name: palette.name, color0: palette.color0, color1: palette.color1, color2: palette.color2, color3: palette.color3, color4: palette.color4, projects_id: projMatch.id }), 
+    headers: new Headers({ 'Content-Type': 'application/json' })
+  })
+  const newPalette = await post.json();
+  await renderPalette([newPalette]);
   $('#pal-name-input').val('');
 }
 
