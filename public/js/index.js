@@ -11,29 +11,31 @@ const fetchProjects = async() => {
 }
 
 const fetchPalettes = async(project) => {
-  const response = await fetch(`/api/v1/projects/${project.id}/palettes`);
+  const response = await fetch(`/api/v1/palettes`);
   const palettes = await response.json();
   await renderPalette(palettes);
 }
 
-const renderProject = (project, palettes) => {
+const renderProject = (project) => {
   $('.projects').prepend(`<h3 class='proj-name'>${project.name}</h3>`);
   $('select').append(`<option>${project.name}</option>`);
 }
 
 const renderPalette = (palettes, project) => {
-  palettes.forEach(palette => {
-      $('.palette').append(`
-        <h4 id=${palette.id}>${palette.name}</h4>
-        <div class='saved-colors' id=${palette.id}>
-          <div class='small-box' style='background-color: ${palette.color0}'></div>
-          <div class='small-box' style='background-color: ${palette.color1}'></div>
-          <div class='small-box' style='background-color: ${palette.color2}'></div>
-          <div class='small-box' style='background-color: ${palette.color3}'></div>
-          <div class='small-box' style='background-color: ${palette.color4}'></div>
-          <div class='trash-img'><div/>
-        </div>
-      `)
+  let noDupes = new Set(palettes);
+  noDupes = [...noDupes];
+  noDupes.forEach(palette => {
+    $('.palette').append(`
+      <h4 id=${palette.id}>${palette.name}</h4>
+      <div class='saved-colors' id=${palette.id}>
+        <div class='small-box' style='background-color: ${palette.color0}'></div>
+        <div class='small-box' style='background-color: ${palette.color1}'></div>
+        <div class='small-box' style='background-color: ${palette.color2}'></div>
+        <div class='small-box' style='background-color: ${palette.color3}'></div>
+        <div class='small-box' style='background-color: ${palette.color4}'></div>
+        <div class='trash-img'><div/>
+      </div>
+    `)
   });  
 }
 
@@ -65,6 +67,7 @@ const savePalette = async(e) => {
 }
 
 const postPalette = async(projMatch, palette) => {
+  console.log(palette)
   const post = await fetch(`/api/v1/projects/${projMatch.id}/palettes/`, {
     method: 'POST',
     body: JSON.stringify({ name: palette.name, color0: palette.color0, color1: palette.color1, color2: palette.color2, color3: palette.color3, color4: palette.color4, projects_id: projMatch.id }), 
@@ -131,6 +134,7 @@ const deletePalette = async(e, id) => {
 
 $(document).ready(() => {
   fetchProjects();
+  fetchPalettes();
   genRandomHex();
 });
 $('.save-pal-btn').on('click', savePalette);
