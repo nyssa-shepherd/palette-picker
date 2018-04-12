@@ -18,5 +18,6 @@ JavaScript, jQuery, Node/Express, Chai, Mocha, Postgres, SQL
 * Utilizing a database to have data persist 
 
 
+## Screen Shot:
 
 ![alt text](./public/images/screen-shot.png)
