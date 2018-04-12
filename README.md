@@ -8,7 +8,14 @@ Palette Picker is a school project. Based off the website Coolors, Palette Picke
 
 ## Tech Stack: 
 
-JavaScript, jQuery, Node/Express, Chai, Mocha, Postgres, SQL
+* JavaScript
+* jQuery
+* Node
+* Express 
+* Chai 
+* Mocha
+* Postgres
+* SQL
 
 ## Learning Goals: 
 
